@@ -1,0 +1,14 @@
+.mtm-layout {
+  &:has(.mtm-login-page, .mtm-admin-dashboard-page) {
+    .mtm-header,
+    .mtm-footer {
+      display: none;
+    }
+  }
+
+  &:has(.mtm-not-found-page) {
+    .mtm-footer {
+      display: none;
+    }
+  }
+}

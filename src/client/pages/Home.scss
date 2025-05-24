@@ -1,0 +1,43 @@
+.mtm-home-page {
+  min-height: calc(100dvh - 64px);
+  background: #efeeed;
+  padding: 0 min(24px, 0.48rem + 1.92dvw);
+  width: 100%;
+  border-radius: 0 0 min(150px, 3rem + 12dvw) min(150px, 3rem + 12dvw);
+  padding-bottom: min(100px, 2rem + 8dvw);
+
+  &.mtm-primal {
+    display: flex;
+    align-items: center;
+    padding-bottom: 0;
+
+    .mtm-main {
+      top: -32px;
+    }
+  }
+
+  .mtm-main {
+    margin: auto;
+    position: relative;
+    max-width: 1200px;
+    top: 0;
+
+    .mtm-heading {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+      font-size: min(56px, 1.12rem + 4.48dvw);
+      line-height: min(64px, 1.28rem + 5.12dvw);
+      text-align: center;
+      margin-bottom: min(24px, 0.48rem + 1.92dvw);
+    }
+
+    .mtm-sub-heading {
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 24px;
+      text-align: center;
+      margin-bottom: min(60px, 1.2rem + 4.8dvw);
+    }
+  }
+}

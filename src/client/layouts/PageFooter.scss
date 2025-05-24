@@ -1,0 +1,59 @@
+.mtm-footer {
+  height: 500px;
+  background: #efeeed;
+
+  .mtm-footer__main {
+    height: 100%;
+    background: white;
+    border-radius: min(150px, 3rem + 12dvw) min(150px, 3rem + 12dvw) 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .mtm-footer__content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      max-width: 1200px;
+      padding: 0 min(24px, 0.48rem + 1.92dvw);
+
+      .mtm-heading {
+        font-family: "Poppins", sans-serif;
+        font-size: min(48px, 0.96rem + 3.48dvw);
+        font-weight: 600;
+        line-height: min(56px, 1.12rem + 4.48dvw);
+        text-align: center;
+        margin-bottom: min(36px, 0.72rem + 2.88dvw);
+      }
+
+      .mtm-sub-heading {
+        font-family: "Poppins", sans-serif;
+        font-size: min(24px, 0.48rem + 1.92dvw);
+        font-weight: 400;
+        line-height: min(32px, 0.64rem + 2.56dvw);
+        text-align: center;
+        margin-bottom: min(60px, 1.2rem + 4.8dvw);
+      }
+
+      .mtm-button {
+        height: 50px;
+        border-radius: 100px;
+        font-family: "Poppins", sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 24px;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        flex-direction: row-reverse;
+
+        .ant-btn-icon {
+          background: white;
+          border-radius: 100px;
+          margin-inline-start: 8px;
+          margin-inline-end: 0;
+        }
+      }
+    }
+  }
+}
