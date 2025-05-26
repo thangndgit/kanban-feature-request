@@ -1,4 +1,4 @@
-import HttpError from '../utils/HttpError.js';
+import { HttpError } from '../utils/_index.js';
 
 class BaseController {
   constructor(service) {
@@ -97,3 +97,4 @@ class BaseController {
 }
 
 export default BaseController;
+

@@ -1,18 +1,60 @@
 {
-  "env": {
-    "browser": true,
-    "es2021": true,
-    "node": true
-  },
-  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react-hooks/recommended"],
-  "parserOptions": {
-    "ecmaVersion": "latest",
-    "sourceType": "module"
-  },
-  "plugins": ["react", "react-hooks"],
-  "rules": {
-    "react/prop-types": "off",
-    "react/react-in-jsx-scope": "off",
-    "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }]
-  }
+  "root": true,
+  "overrides": [
+    {
+      "files": ["src/client/**/*.{js,jsx}"],
+      "env": {
+        "browser": true,
+        "es2021": true,
+        "node": true
+      },
+      "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:react-hooks/recommended"],
+      "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+      },
+      "plugins": ["react", "react-hooks"],
+      "rules": {
+        "react/prop-types": "off",
+        "react/react-in-jsx-scope": "off",
+        "no-unused-vars": ["warn", { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }]
+      }
+    },
+    {
+      "files": ["src/server/**/*.{js,mjs}", "server.js", "vite.config.js"],
+      "env": {
+        "es2021": true
+      },
+      "globals": {
+        "console": "readonly",
+        "process": "readonly"
+      },
+      "extends": ["plugin:import/recommended"],
+      "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+      },
+      "plugins": ["import"],
+      "rules": {
+        "no-console": "off",
+        "semi": ["error", "always"],
+        "quotes": ["error", "single"],
+        "indent": ["error", 2],
+        "comma-dangle": ["error", "only-multiline"],
+        "no-unused-vars": [
+          "warn",
+          {
+            "args": "all",
+            "ignoreRestSiblings": true,
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_"
+          }
+        ],
+        "no-undef": "error",
+        "import/no-unresolved": ["error", { "commonjs": false, "ignore": ["^node:"] }],
+        "import/no-nodejs-modules": "off"
+      }
+    }
+  ],
+  "ignorePatterns": ["public/**", "dist/**", "node_modules/**"]
 }

@@ -1,4 +1,3 @@
-// src/server/constants/feature-request.js
 export const FEATURE_REQUEST_STATUS = {
   PENDING: 'pending',
   APPROVED: 'approved',
@@ -36,3 +35,4 @@ export const VALIDATION = {
   MAX_IMAGES_PER_REQUEST: 5,
   MAX_IMAGES_PER_COMMENT: 3,
 };
+

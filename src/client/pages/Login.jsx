@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { callApi } from '../utils/api.util';
+import { adminApi } from '../apis/_index';
+import { useAdmin } from '../hooks/_index';
 import notify from '../utils/notify';
-import { callApi } from '../utils/api';
-import { adminApi } from '../apis';
-import { useAdmin } from '../hooks';
 import './Login.scss';
 
 const Login = () => {
@@ -19,9 +19,10 @@ const Login = () => {
     setIsLoggingIn(true);
     const result = await callApi(adminApi.login(formData));
     setIsLoggingIn(false);
-    notify.success('Login successful');
+
     if (result?.data?.token) setAdminToken(result?.data?.token);
 
+    notify.success('Login successful');
     navigate(0);
   };
 
@@ -31,28 +32,35 @@ const Login = () => {
   };
 
   return (
-    <div className="mtm-login-page">
-      <div className="mtm-login-pane">
+    <div className="login-page">
+      <div className="login-pane">
         <h1>LOGIN</h1>
 
-        <form className="mtm-login-form" onSubmit={handleLogin} onChange={handleChange}>
-          <div className="mtm-login-form__input">
+        <form className="login-form" onSubmit={handleLogin} onChange={handleChange}>
+          <div className="login-form__input">
             <label>Username</label>
-            <input id="username" placeholder="Enter user name . . ." required value={formData.username} />
+            <input
+              id="username"
+              placeholder="Enter username . . ."
+              value={formData.username}
+              onChange={() => {}}
+              required
+            />
           </div>
 
-          <div className="mtm-login-form__input">
+          <div className="login-form__input">
             <label>Password</label>
             <input
               id="password"
               type="password"
               placeholder="Enter password . . ."
-              required
               value={formData.password}
+              onChange={() => {}}
+              required
             />
           </div>
 
-          <button className="mtm-login-form__submit" type="submit" disabled={isLoggingIn}>
+          <button className="login-form__submit" type="submit" disabled={isLoggingIn}>
             {isLoggingIn ? 'Please wait . . .' : 'Login'}
           </button>
         </form>
@@ -62,3 +70,4 @@ const Login = () => {
 };
 
 export default Login;
+

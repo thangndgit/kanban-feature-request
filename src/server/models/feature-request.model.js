@@ -80,3 +80,4 @@ featureRequestSchema.methods.addComment = function (commentData) {
 };
 
 export default mongoose.model('FeatureRequest', featureRequestSchema);
+

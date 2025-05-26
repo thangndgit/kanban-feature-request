@@ -5,12 +5,12 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import mongoose from 'mongoose';
-import rateLimit from 'express-rate-limit';
+import { rateLimit } from 'express-rate-limit';
 import bodyParser from 'body-parser';
 import mongoSanitize from 'express-mongo-sanitize';
 import { adminRoutes, appRoutes, featureRequestRoutes } from './src/server/routes/_index.js';
 import { globalErrorHandler } from './src/server/middlewares/error.js';
-import HttpError from './src/server/utils/HttpError.js';
+import { HttpError } from './src/server/utils/_index.js';
 
 // Load environment variables
 dotenv.config();
@@ -103,8 +103,8 @@ app.use('*', async (req, res) => {
     const rendered = await render(url, ssrManifest);
 
     const html = template
-      .replace(`<!--app-head-->`, rendered.head ?? '')
-      .replace(`<!--app-html-->`, rendered.html ?? '');
+      .replace('<!--app-head-->', rendered.head ?? '')
+      .replace('<!--app-html-->', rendered.html ?? '');
 
     res.status(200).set({ 'Content-Type': 'text/html' }).send(html);
   } catch (e) {

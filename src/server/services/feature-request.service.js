@@ -1,6 +1,5 @@
-// src/server/services/feature-request.service.js
 import BaseService from './base.service.js';
-import { FeatureRequestModel } from '../models/index.js';
+import { FeatureRequestModel } from '../models/_index.js';
 import { FEATURE_REQUEST_STATUS } from '../constants/feature-request.js';
 
 class FeatureRequestService extends BaseService {
@@ -8,7 +7,7 @@ class FeatureRequestService extends BaseService {
     super(FeatureRequestModel);
   }
 
-  async createRequest(data, appId, requester, isAdminCreated = false, adminCreator = null) {
+  createRequest = async (data, appId, requester, isAdminCreated = false, adminCreator = null) => {
     const requestData = {
       ...data,
       appId,
@@ -19,9 +18,9 @@ class FeatureRequestService extends BaseService {
     };
 
     return await this.create(requestData);
-  }
+  };
 
-  async getRequestsByApp(appId, options = {}) {
+  getRequestsByApp = async (appId, options = {}) => {
     const filter = { appId };
     const queryOptions = {
       ...options,
@@ -30,14 +29,14 @@ class FeatureRequestService extends BaseService {
     };
 
     return await this.getAll(filter, queryOptions);
-  }
+  };
 
-  async getRequestsByStatus(appId, status, options = {}) {
+  getRequestsByStatus = async (appId, status, options = {}) => {
     const filter = { appId, status };
     return await this.getAll(filter, options);
-  }
+  };
 
-  async upvoteRequest(id, userId, userName, email) {
+  upvoteRequest = async (id, userId, userName, email) => {
     const request = await this.getById(id);
     if (!request) {
       throw new Error('Request not found');
@@ -55,9 +54,9 @@ class FeatureRequestService extends BaseService {
     }
 
     return await request.save();
-  }
+  };
 
-  async addComment(id, commentData) {
+  addComment = async (id, commentData) => {
     const request = await this.getById(id);
     if (!request) {
       throw new Error('Request not found');
@@ -65,18 +64,18 @@ class FeatureRequestService extends BaseService {
 
     request.addComment(commentData);
     return await request.save();
-  }
+  };
 
-  async updateStatus(id, status, assignedTo = null) {
+  updateStatus = async (id, status, assignedTo = null) => {
     const updateData = { status };
     if (assignedTo !== null) {
       updateData.assignedTo = assignedTo;
     }
 
     return await this.updateById(id, updateData);
-  }
+  };
 
-  async getRequestsByUser(userId, appId = null) {
+  getRequestsByUser = async (userId, appId = null) => {
     const filter = { 'requester.userId': userId };
     if (appId) {
       filter.appId = appId;
@@ -86,9 +85,9 @@ class FeatureRequestService extends BaseService {
       populate: 'appId',
       sort: { createdAt: -1 },
     });
-  }
+  };
 
-  async getPopularRequests(appId, limit = 10) {
+  getPopularRequests = async (appId, limit = 10) => {
     const filter = { appId };
     const options = {
       limit,
@@ -96,18 +95,18 @@ class FeatureRequestService extends BaseService {
     };
 
     return await this.getAll(filter, options);
-  }
+  };
 
-  async searchRequests(appId, searchQuery, options = {}) {
+  searchRequests = async (appId, searchQuery, options = {}) => {
     const filter = {
       appId,
       $or: [{ title: { $regex: searchQuery, $options: 'i' } }, { description: { $regex: searchQuery, $options: 'i' } }],
     };
 
     return await this.getAll(filter, options);
-  }
+  };
 
-  async getRequestsGroupedByStatus(appId) {
+  getRequestsGroupedByStatus = async (appId) => {
     const requests = await FeatureRequestModel.find({ appId }).populate('appId').sort({ createdAt: -1 });
 
     const grouped = {
@@ -125,10 +124,10 @@ class FeatureRequestService extends BaseService {
     });
 
     return grouped;
-  }
+  };
 
   // Admin creates feature request (with admin context)
-  async createAdminRequest(data, appId, adminUsername) {
+  createAdminRequest = async (data, appId, adminUsername) => {
     // Use admin info as requester but mark as admin-created
     const adminRequester = {
       userId: `admin_${adminUsername}`,
@@ -137,12 +136,13 @@ class FeatureRequestService extends BaseService {
     };
 
     return await this.createRequest(data, appId, adminRequester, true, adminUsername);
-  }
+  };
 
   // Assign task to developer
-  async assignTask(id, assignedTo) {
+  assignTask = async (id, assignedTo) => {
     return await this.updateById(id, { assignedTo });
-  }
+  };
 }
 
 export default new FeatureRequestService();
+

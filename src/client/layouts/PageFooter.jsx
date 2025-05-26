@@ -1,6 +1,6 @@
-import { Button } from "antd";
-import arrowIcon from "../assets/arrow.svg";
-import "./PageFooter.scss";
+import { Button } from 'antd';
+import arrowIcon from '../assets/arrow.svg';
+import './PageFooter.scss';
 
 const PageFooter = () => {
   return (
@@ -25,3 +25,4 @@ const PageFooter = () => {
 };
 
 export default PageFooter;
+

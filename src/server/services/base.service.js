@@ -3,12 +3,12 @@ class BaseService {
     this.model = model;
   }
 
-  async create(data) {
+  create = async (data) => {
     const document = new this.model(data);
     return await document.save();
-  }
+  };
 
-  async getAll(filter = {}, options = {}) {
+  getAll = async (filter = {}, options = {}) => {
     const { page = 1, limit = 10, sort = { createdAt: -1 }, populate = '' } = options;
     const skip = (page - 1) * limit;
 
@@ -24,16 +24,11 @@ class BaseService {
 
     return {
       data: documents,
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit),
-      },
+      pagination: { page, limit, total, pages: Math.ceil(total / limit) },
     };
-  }
+  };
 
-  async getById(id, populate = '') {
+  getById = async (id, populate = '') => {
     let query = this.model.findById(id);
 
     if (populate) {
@@ -41,17 +36,17 @@ class BaseService {
     }
 
     return await query;
-  }
+  };
 
-  async updateById(id, data) {
+  updateById = async (id, data) => {
     return await this.model.findByIdAndUpdate(id, data, { new: true, runValidators: true });
-  }
+  };
 
-  async deleteById(id) {
+  deleteById = async (id) => {
     return await this.model.findByIdAndDelete(id);
-  }
+  };
 
-  async findOne(filter, populate = '') {
+  findOne = async (filter, populate = '') => {
     let query = this.model.findOne(filter);
 
     if (populate) {
@@ -59,11 +54,12 @@ class BaseService {
     }
 
     return await query;
-  }
+  };
 
-  async count(filter = {}) {
+  count = async (filter = {}) => {
     return await this.model.countDocuments(filter);
-  }
+  };
 }
 
 export default BaseService;
+

@@ -9,7 +9,12 @@
     "build:client": "vite build --ssrManifest --outDir dist/client",
     "build:server": "vite build --ssr src/client/entry-server.jsx --outDir dist/server",
     "preview": "cross-env NODE_ENV=production node server",
-    "lint": "eslint \"src/client/**/*.{js,jsx}\""
+    "lint": "eslint .",
+    "lint:client": "eslint src/client",
+    "lint:server": "eslint src/server",
+    "lint:fix": "eslint . --fix",
+    "lint:client:fix": "eslint src/client --fix",
+    "lint:server:fix": "eslint src/server --fix"
   },
   "dependencies": {
     "@ant-design/cssinjs": "^1.18.4",
@@ -36,7 +41,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.2",
     "nodemailer": "^6.9.13",
-    "nodemon": "^3.1.0",
+    "nodemon": "^3.1.10",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-beautiful-dnd": "^13.1.1",
@@ -60,8 +65,9 @@
     "@vitejs/plugin-react-swc": "^3.5.0",
     "cross-env": "^7.0.3",
     "eslint": "8",
-    "eslint-plugin-react": "^7.35.0",
-    "eslint-plugin-react-hooks": "^4.6.2",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
     "prettier": "^3.3.3",
     "stylelint": "^15.6.1",
     "vite": "^5.0.10"

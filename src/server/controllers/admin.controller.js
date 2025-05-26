@@ -1,12 +1,12 @@
 import { AdminService } from '../services/_index.js';
-import HttpError from '../utils/HttpError';
-
+import { HttpError } from '../utils/_index.js';
+import crypto from 'crypto';
 class AdminController {
   constructor() {
     this.service = AdminService;
   }
 
-  async login(req, res, next) {
+  login = async (req, res, next) => {
     try {
       const { username, password } = req.body;
 
@@ -14,9 +14,9 @@ class AdminController {
         return next(new HttpError(400, 'Username and password are required'));
       }
 
-      const admins = await this.service.findAll();
+      const admins = await this.service.getAll();
 
-      if (admins.length === 0) {
+      if (!admins.data.length) {
         const defaultPassword = crypto.createHash('sha256').update('matitmui@123').digest('hex');
 
         await this.service.create({
@@ -31,7 +31,7 @@ class AdminController {
 
       const encryptedPassword = crypto.createHash('sha256').update(password).digest('hex');
 
-      const admin = admins.find((admin) => admin.username === username && admin.password === encryptedPassword);
+      const admin = admins.data.find((admin) => admin.username === username && admin.password === encryptedPassword);
 
       if (!admin) {
         return next(new HttpError(401, 'Invalid username or password'));
@@ -49,7 +49,7 @@ class AdminController {
     } catch (error) {
       next(error);
     }
-  }
+  };
 }
 
 export default new AdminController();

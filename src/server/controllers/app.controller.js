@@ -1,7 +1,7 @@
 // src/server/controllers/app.controller.js
 import BaseController from './base.controller.js';
 import { AppService } from '../services/_index.js';
-import HttpError from '../utils/HttpError.js';
+import { HttpError } from '../utils/_index.js';
 
 class AppController extends BaseController {
   constructor() {
@@ -18,22 +18,6 @@ class AppController extends BaseController {
         status: 'OK',
         message: 'App created successfully',
         data,
-      });
-    } catch (error) {
-      next(error);
-    }
-  };
-
-  // Get apps created by current admin
-  getMyApps = async (req, res, next) => {
-    try {
-      const { username } = req.admin; // From auth middleware
-      const result = await this.service.getAppsByCreator(username);
-
-      res.status(200).json({
-        status: 'OK',
-        message: 'Apps retrieved successfully',
-        ...result,
       });
     } catch (error) {
       next(error);
@@ -98,6 +82,8 @@ class AppController extends BaseController {
   regenerateApiKey = async (req, res, next) => {
     try {
       const { id } = req.params;
+
+      console.log('regenerateApiKey', id);
       const data = await this.service.regenerateApiKey(id);
 
       if (!data) {
@@ -145,3 +131,4 @@ class AppController extends BaseController {
 }
 
 export default new AppController();
+

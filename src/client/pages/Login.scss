@@ -1,17 +1,65 @@
-.mtm-login-page {
-  background: url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/ghost_blade.jpg?v=1729759813');
+body::before {
+  content: '';
+  position: absolute;
+  top: -9999px;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  background-image: url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/1.avif?v=1733594486'),
+    url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/2.avif?v=1733594486'),
+    url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/3.avif?v=1733594486'),
+    url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/4.avif?v=1733594486'),
+    url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/5.avif?v=1733594486'),
+    url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/6.avif?v=1733594486');
+  background-size: cover;
+  z-index: -1;
+}
+
+@keyframes changeLoginImage {
+  0% {
+    background-image: url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/1.avif?v=1733594486');
+  }
+  16.6% {
+    background-image: url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/2.avif?v=1733594486');
+  }
+  33.3% {
+    background-image: url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/3.avif?v=1733594486');
+  }
+  50% {
+    background-image: url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/4.avif?v=1733594486');
+  }
+  66.6% {
+    background-image: url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/5.avif?v=1733594486');
+  }
+  83.3% {
+    background-image: url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/6.avif?v=1733594486');
+  }
+  100% {
+    background-image: url('https://cdn.shopify.com/s/files/1/0711/8759/5477/files/1.avif?v=1733594486');
+  }
+}
+
+body:has(.login-page) {
+  .mtm-header,
+  .mtm-footer {
+    display: none;
+  }
+}
+
+.login-page {
   background-size: cover;
   background-position: center;
   width: 100vw;
   height: 100vh;
   color: white;
+  animation: changeLoginImage 18s infinite;
 
   * {
     font-size: 1.2rem !important;
     font-weight: 500;
   }
 
-  .mtm-login-pane {
+  .login-pane {
     width: 100%;
     max-width: 420px;
     background: transparent;
@@ -34,12 +82,12 @@
       text-shadow: white 0px 0px 12px;
     }
 
-    .mtm-login-form {
+    .login-form {
       display: flex;
       flex-direction: column;
       gap: 1rem;
 
-      .mtm-login-form__input {
+      .login-form__input {
         display: flex;
         flex-direction: column;
         gap: 0.5rem;
@@ -55,19 +103,23 @@
           color: white;
           box-shadow: 0 0 12px white;
         }
+
+        input::placeholder {
+          color: rgba(255, 255, 255, 0.75);
+        }
       }
 
-      .mtm-login-form__submit {
-        cursor: pointer;
-        margin-top: 2rem;
-        padding: 0.5rem 1rem;
-        border-radius: 100px;
-        opacity: 1;
-        transition: all 0.15s;
-        background-color: rgba(0, 0, 0, 0.75);
+      .login-form__submit {
         color: white;
-        text-shadow: white 0px 0px 12px;
+        cursor: pointer;
+        opacity: 1;
+        padding: 0.5rem 1rem;
+        margin-top: 2rem;
+        transition: all 0.15s;
         box-shadow: 0 0 12px white;
+        text-shadow: white 0px 0px 12px;
+        border-radius: 100px;
+        background-color: rgba(0, 0, 0, 0.75);
 
         &:hover {
           opacity: 0.65;
@@ -76,3 +128,4 @@
     }
   }
 }
+

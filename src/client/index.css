@@ -1,3 +1,7 @@
+body {
+  background-color: #f1f1f1;
+}
+
 /* customize antd input */
 input.ant-input:hover,
 input.ant-input:focus,
@@ -11,16 +15,20 @@ input.ant-input:disabled {
 }
 
 /* customize antd button */
-.ant-btn:hover {
+.ant-btn:hover,
+.ant-float-btn:hover {
   opacity: 0.75;
 }
 
-.ant-btn.ant-btn-default:hover {
+.ant-btn.ant-btn-default:hover,
+.ant-float-btn.ant-float-btn-default:hover {
   color: #f24a6f !important;
   border-color: #f24a6f !important;
 }
 
-.ant-btn.ant-btn-primary {
+.ant-btn.ant-btn-primary,
+.ant-float-btn.ant-float-btn-primary,
+.ant-float-btn.ant-float-btn-primary .ant-float-btn-body {
   color: white !important;
   background: linear-gradient(270deg, #f24a6f 0%, #f3935f 52.5%) !important;
 }
@@ -141,3 +149,4 @@ input.ant-input:disabled {
   font-weight: 900;
   font-style: italic;
 }
+

@@ -1,7 +1,6 @@
-// src/server/controllers/feature-request.controller.js
 import BaseController from './base.controller.js';
 import { FeatureRequestService, AppService } from '../services/_index.js';
-import HttpError from '../utils/HttpError.js';
+import { HttpError } from '../utils/_index.js';
 
 class FeatureRequestController extends BaseController {
   constructor() {
@@ -165,11 +164,7 @@ class FeatureRequestController extends BaseController {
         return next(new HttpError(400, 'Comment content is required'));
       }
 
-      let commentData = {
-        content,
-        images,
-        isAdmin: false,
-      };
+      let commentData = { content, images, isAdmin: false };
 
       if (isAdmin && req.admin) {
         const adminUsername = req.admin.username;
@@ -383,3 +378,4 @@ class FeatureRequestController extends BaseController {
 }
 
 export default new FeatureRequestController();
+

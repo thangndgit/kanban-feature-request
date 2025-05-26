@@ -23,15 +23,16 @@ export const callApi = async (
   }
 };
 
-export const makeApiFetch = (url, { method = 'get', params, body, headers = {} }) => {
+export const makeApiFetch = (url, { method = 'get', params, body, headers = {}, isAdmin = false }) => {
   const version = constants.API.VERSION;
-  let apiEndpoint = `/api/${version}/${url}`;
+  let apiEndpoint = `/api/${version}/${url}`.replace(/\/+/g, '/');
 
   const options = {
     method,
     headers: {
       'Content-Type': 'application/json',
       ...headers,
+      ...(isAdmin ? { 'x-admin-token': localStorage.getItem('admin_token') } : {}),
     },
   };
 
@@ -45,3 +46,4 @@ export const makeApiFetch = (url, { method = 'get', params, body, headers = {} }
 
   return () => fetch(apiEndpoint, options);
 };
+

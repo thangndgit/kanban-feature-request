@@ -1,11 +1,6 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback } from 'react';
 
 const useAdmin = () => {
-  const isAdmin = useMemo(() => {
-    if (typeof window === 'undefined') return false;
-    return localStorage.getItem('admin_password') === import.meta.env.VITE_ADMIN_PASSWORD;
-  }, []);
-
   const getAdminToken = useCallback(() => {
     if (typeof window === 'undefined') return false;
     return localStorage.getItem('admin_token');
@@ -21,7 +16,8 @@ const useAdmin = () => {
     return localStorage.removeItem('admin_token');
   }, []);
 
-  return { isAdmin, getAdminToken, setAdminToken, removeAdminToken };
+  return { getAdminToken, setAdminToken, removeAdminToken };
 };
 
 export default useAdmin;
+

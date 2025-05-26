@@ -1,6 +1,7 @@
 import { Button, Result } from 'antd';
-import { Container } from '../components';
+import { Container } from '../components/_index';
 import { useEffect } from 'react';
+import './NotFound.scss';
 
 const NotFound = () => {
   useEffect(() => {
@@ -25,3 +26,4 @@ const NotFound = () => {
 };
 
 export default NotFound;
+

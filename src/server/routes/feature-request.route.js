@@ -1,6 +1,5 @@
-// src/server/routes/feature-request.route.js
 import express from 'express';
-import { FeatureRequestController } from '../controllers/index.js';
+import { FeatureRequestController } from '../controllers/_index.js';
 import { requireRoles } from '../middlewares/require-roles.js';
 
 const router = express.Router();
@@ -33,3 +32,4 @@ router.post('/:id/admin-comments', (req, res, next) => {
 });
 
 export default router;
+
