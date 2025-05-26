@@ -15,6 +15,8 @@ export const requireRoles = (...roles) => {
       if (!roles.includes(matchAdmin.role))
         throw new HttpError(401, `Forbidden: Your token must have one of the following roles: ${roles.join(', ')}`);
 
+      req.admin = matchAdmin;
+
       next();
       //
     } catch (error) {
@@ -23,3 +25,4 @@ export const requireRoles = (...roles) => {
     }
   };
 };
+

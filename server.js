@@ -8,7 +8,7 @@ import mongoose from 'mongoose';
 import rateLimit from 'express-rate-limit';
 import bodyParser from 'body-parser';
 import mongoSanitize from 'express-mongo-sanitize';
-import { visitorRoutes, reportRoutes, verifyRoutes, adminRoutes, pageConfigRoutes } from './src/server/routes/index.js';
+import { adminRoutes, appRoutes, featureRequestRoutes } from './src/server/routes/_index.js';
 import { globalErrorHandler } from './src/server/middlewares/error.js';
 import HttpError from './src/server/utils/HttpError.js';
 
@@ -76,11 +76,9 @@ app.use(mongoSanitize());
 app.use(hpp());
 
 // Import API routes
-app.use('/api/v1/visitors', visitorRoutes);
-app.use('/api/v1/reports', reportRoutes);
-app.use('/api/v1/verify', verifyRoutes);
 app.use('/api/v1/admin', adminRoutes);
-app.use('/api/v1/page-config', pageConfigRoutes);
+app.use('/api/v1/app', appRoutes);
+app.use('/api/v1/feature-request', featureRequestRoutes);
 
 // Error handling
 app.use(globalErrorHandler);

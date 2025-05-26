@@ -62,6 +62,7 @@ const httpStatus = {
   508: 'LOOP_DETECTED',
   510: 'NOT_EXTENDED',
   511: 'NETWORK_AUTHENTICATION_REQUIRED',
-}
+};
 
-export default httpStatus
+export default httpStatus;
+
