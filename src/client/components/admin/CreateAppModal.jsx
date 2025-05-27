@@ -11,6 +11,7 @@ const CreateAppModal = ({ open, onCancel, onCreate, loading, form }) => (
     }}
     footer={null}
     width={500}
+    centered
   >
     <Form form={form} layout="vertical" onFinish={onCreate} style={{ paddingTop: 16 }}>
       <Form.Item

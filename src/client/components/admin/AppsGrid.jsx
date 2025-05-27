@@ -8,18 +8,19 @@ const AppsGrid = ({ apps, onCardClick }) => (
       <Col xs={24} sm={12} md={8} lg={6} key={app._id}>
         <Card
           hoverable
-          style={{
-            width: '100%',
-            border: '2px solid',
-            borderImage: 'linear-gradient(135deg, #f24a6f, #f3935f) 1',
-            boxShadow: '0 2px 12px rgba(242, 74, 111, 0.08)',
-          }}
+          style={{ border: '1px solid rgba(242, 74, 111, 0.5)' }}
           cover={
-            <div style={{ height: 160, overflow: 'hidden', backgroundColor: '#f0f0f0' }}>
+            <div style={{ height: 180, overflow: 'hidden', backgroundColor: '#f3f3f3' }}>
               <img
                 alt={app.name}
                 src={app.imageUrl || 'https://placehold.co/500x500?text=NO+IMAGE'}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  border: '1px solid rgba(242, 74, 111, 0.5)',
+                  borderBottom: 'none',
+                }}
                 onError={(e) => {
                   e.target.src = 'https://placehold.co/500x500?text=NO+IMAGE';
                 }}
@@ -27,6 +28,7 @@ const AppsGrid = ({ apps, onCardClick }) => (
             </div>
           }
           onClick={() => onCardClick(app._id)}
+          bordered
         >
           <Meta
             title={app.name}

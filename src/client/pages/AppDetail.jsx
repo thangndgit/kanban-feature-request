@@ -5,7 +5,6 @@ import {
   Button,
   Descriptions,
   Tag,
-  Space,
   Spin,
   Typography,
   Divider,
@@ -16,29 +15,212 @@ import {
   Tooltip,
   Form,
   Input,
+  Image,
+  Flex,
+  Space,
 } from 'antd';
-import {
-  CopyOutlined,
-  ReloadOutlined,
-  DeleteOutlined,
-  EyeOutlined,
-  EyeInvisibleOutlined,
-  EditOutlined,
-} from '@ant-design/icons';
+import { CopyOutlined, ReloadOutlined, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { AdminContainer } from '../components/admin/_index';
 import { callApi } from '../utils/api.util';
 import { appApi } from '../apis/_index';
 import notify from '../utils/notify';
 import { useAdmin } from '../hooks/_index';
+import { formatDateTime } from '../utils/_index';
 
 const { Title, Text, Paragraph } = Typography;
+
+function AppImageCard({ imageUrl, name }) {
+  return (
+    <Card style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      {imageUrl && <Image src={imageUrl} alt={name} onError={(e) => (e.target.style.display = 'none')} />}
+    </Card>
+  );
+}
+
+function AppDataCard({ app, onEdit, onDelete, onCopyApiKey, onRegenerateApiKey, loading }) {
+  return (
+    <Card
+      title={app.name}
+      extra={
+        <Flex align="center">
+          <Tooltip title="Edit App">
+            <Button icon={<EditOutlined />} type="text" onClick={onEdit} />
+          </Tooltip>
+          <Tooltip title="Delete App">
+            <Button icon={<DeleteOutlined />} type="text" danger onClick={onDelete} />
+          </Tooltip>
+        </Flex>
+      }
+      style={{ width: '100%', height: '100%' }}
+      loading={loading}
+    >
+      <Descriptions column={1} size="small" style={{ marginBottom: 16 }}>
+        <Descriptions.Item label="Description">
+          <Text type="secondary">{app.description || 'No description provided'}</Text>
+        </Descriptions.Item>
+
+        <Descriptions.Item label="Status">
+          <Tag color={app.isActive ? 'green' : 'red'}>{app.isActive ? 'Active' : 'Inactive'}</Tag>
+        </Descriptions.Item>
+
+        <Descriptions.Item label="Created">{formatDateTime(app.createdAt)}</Descriptions.Item>
+      </Descriptions>
+
+      <Divider />
+
+      <Flex vertical gap={8}>
+        <Text strong>API Key:</Text>
+
+        <Text style={{ fontSize: 12, fontFamily: 'monospace', background: '#f5f5f5', padding: 8, borderRadius: 6 }}>
+          <Flex gap={8} justify="space-between" align="center">
+            <span>{app.apiKey}</span>
+
+            <Flex gap={8}>
+              <Button size="small" icon={<CopyOutlined />} onClick={onCopyApiKey} />
+              <Button size="small" icon={<ReloadOutlined />} onClick={onRegenerateApiKey} danger />
+            </Flex>
+          </Flex>
+        </Text>
+      </Flex>
+      <Divider />
+
+      <Flex vertical gap={8}>
+        <Text strong>Widget Integration:</Text>
+        <Paragraph
+          copyable={{
+            text: `<script src="https://your-domain.com/widget.js" data-api-key="${app.apiKey}"></script>`,
+          }}
+          style={{ fontSize: 12, fontFamily: 'monospace', background: '#f5f5f5', padding: 8, borderRadius: 6 }}
+        >
+          {`<script src="https://your-domain.com/widget.js" data-api-key="${app.apiKey}"></script>`}
+        </Paragraph>
+      </Flex>
+    </Card>
+  );
+}
+
+function FeatureRequestsCard({ appId }) {
+  const navigate = useNavigate();
+  return (
+    <Card
+      title={
+        <Row align="middle" justify="space-between" style={{ width: '100%' }}>
+          <Col>Feature Requests Management</Col>
+          <Col>
+            <Space>
+              <Button type="primary" onClick={() => navigate(`/admin/apps/${appId}/kanban`)}>
+                Open Kanban Board
+              </Button>
+            </Space>
+          </Col>
+        </Row>
+      }
+    >
+      <Row gutter={[16, 16]}>
+        <Col xs={24} sm={8}>
+          <Card size="small">
+            <div style={{ textAlign: 'center' }}>
+              <Title level={2} style={{ margin: 0, color: '#1890ff' }}>
+                0
+              </Title>
+              <Text type="secondary">Pending Requests</Text>
+            </div>
+          </Card>
+        </Col>
+        <Col xs={24} sm={8}>
+          <Card size="small">
+            <div style={{ textAlign: 'center' }}>
+              <Title level={2} style={{ margin: 0, color: '#52c41a' }}>
+                0
+              </Title>
+              <Text type="secondary">Completed</Text>
+            </div>
+          </Card>
+        </Col>
+        <Col xs={24} sm={8}>
+          <Card size="small">
+            <div style={{ textAlign: 'center' }}>
+              <Title level={2} style={{ margin: 0, color: '#faad14' }}>
+                0
+              </Title>
+              <Text type="secondary">In Progress</Text>
+            </div>
+          </Card>
+        </Col>
+      </Row>
+    </Card>
+  );
+}
+
+function EditAppModal({ open, onCancel, onOk, loading, form, app }) {
+  return (
+    <Modal
+      open={open}
+      title="Edit App"
+      onCancel={onCancel}
+      onOk={() => form.submit()}
+      okText="Save"
+      confirmLoading={loading}
+      cancelText="Cancel"
+      centered
+    >
+      <Form
+        form={form}
+        layout="vertical"
+        initialValues={{
+          name: app?.name,
+          description: app?.description,
+          imageUrl: app?.imageUrl,
+        }}
+        onFinish={onOk}
+      >
+        <Form.Item
+          name="name"
+          label="App Name"
+          rules={[
+            { required: true, message: 'Please enter app name' },
+            { max: 100, message: 'App name must be less than 100 characters' },
+          ]}
+        >
+          <Input placeholder="Enter app name" />
+        </Form.Item>
+        <Form.Item
+          name="description"
+          label="Description"
+          rules={[{ max: 500, message: 'Description must be less than 500 characters' }]}
+        >
+          <Input.TextArea placeholder="Brief description (optional)" rows={3} />
+        </Form.Item>
+        <Form.Item name="imageUrl" label="App Image URL" rules={[{ type: 'url', message: 'Please enter a valid URL' }]}>
+          <Input placeholder="https://example.com/app-logo.png (optional)" />
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+}
+
+function DeleteAppModal({ open, onCancel, onOk }) {
+  return (
+    <Modal
+      open={open}
+      title="Delete App"
+      onCancel={onCancel}
+      onOk={onOk}
+      okText="Delete"
+      okButtonProps={{ danger: true }}
+      cancelText="Cancel"
+      centered
+    >
+      Are you sure you want to delete this app? This action cannot be undone.
+    </Modal>
+  );
+}
 
 const AppDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [app, setApp] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [apiKeyVisible, setApiKeyVisible] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editLoading, setEditLoading] = useState(false);
@@ -145,235 +327,42 @@ const AppDetail = () => {
     );
   }
 
-  // Kanban board button next to title
-  const featureTitle = (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 16 }}>
-      <span>Feature Requests Management</span>
-      <Button type="primary">Open Kanban Board</Button>
-    </div>
-  );
-
-  // App data card actions (gear for edit, trash for delete)
-  const appDataCardExtra = (
-    <Space>
-      <Tooltip title="Edit App">
-        <Button
-          icon={<EditOutlined />}
-          type="text"
-          onClick={() => {
-            setEditModalOpen(true);
-            editForm.setFieldsValue({
-              name: app.name,
-              description: app.description,
-              imageUrl: app.imageUrl,
-            });
-          }}
-        />
-      </Tooltip>
-      <Tooltip title="Delete App">
-        <Button icon={<DeleteOutlined />} type="text" danger onClick={() => setDeleteModalOpen(true)} />
-      </Tooltip>
-    </Space>
-  );
-
   return (
     <AdminContainer title="App Details" maxWidth="1200px" backAction="/admin/dashboard">
       <Row gutter={[24, 24]} align="stretch">
-        {/* Image Column */}
         <Col xs={24} lg={10} style={{ display: 'flex', alignItems: 'stretch' }}>
-          <Card
-            style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: 0,
-            }}
-          >
-            {app.imageUrl && (
-              <img
-                src={app.imageUrl}
-                alt={app.name}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  borderRadius: 8,
-                  display: 'block',
-                }}
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                }}
-              />
-            )}
-          </Card>
+          <AppImageCard imageUrl={app.imageUrl} name={app.name} />
         </Col>
-
-        {/* App Data Column */}
         <Col xs={24} lg={14} style={{ display: 'flex', alignItems: 'stretch' }}>
-          <Card title={app.name} extra={appDataCardExtra} style={{ width: '100%', height: '100%' }}>
-            <Descriptions column={1} size="small" style={{ marginBottom: 16 }}>
-              <Descriptions.Item label="Description">
-                <Text type="secondary">{app.description || 'No description provided'}</Text>
-              </Descriptions.Item>
-              <Descriptions.Item label="Status">
-                <Tag color={app.isActive ? 'green' : 'red'}>{app.isActive ? 'Active' : 'Inactive'}</Tag>
-              </Descriptions.Item>
-              <Descriptions.Item label="Created">{new Date(app.createdAt).toLocaleDateString()}</Descriptions.Item>
-            </Descriptions>
-            <Divider />
-            <div style={{ marginBottom: 16, display: 'flex', flexDirection: 'column' }}>
-              <Text strong>API Key:</Text>
-              <div
-                style={{
-                  backgroundColor: '#f5f5f5',
-                  padding: 12,
-                  borderRadius: 6,
-                  marginTop: 8,
-                  fontFamily: 'monospace',
-                  fontSize: 12,
-                  wordBreak: 'break-all',
-                  display: 'flex',
-                  alignItems: 'center',
-                  flex: 1,
-                }}
-              >
-                <span>{apiKeyVisible ? app.apiKey : '********************************'}</span>
-                <div style={{ marginLeft: 'auto', display: 'flex', gap: 4 }}>
-                  <Button
-                    icon={apiKeyVisible ? <EyeInvisibleOutlined /> : <EyeOutlined />}
-                    size="small"
-                    type="text"
-                    onClick={() => setApiKeyVisible((v) => !v)}
-                  />
-                  <Button size="small" icon={<CopyOutlined />} onClick={handleCopyApiKey} />
-                  <Button size="small" icon={<ReloadOutlined />} onClick={handleRegenerateApiKey} danger />
-                </div>
-              </div>
-            </div>
-            <Divider />
-            <div>
-              <Text strong>Widget Integration:</Text>
-              <Paragraph
-                copyable={{
-                  text: `<script src="https://your-domain.com/widget.js" data-api-key="${app.apiKey}"></script>`,
-                }}
-                style={{
-                  backgroundColor: '#f5f5f5',
-                  padding: 12,
-                  borderRadius: 6,
-                  marginTop: 8,
-                  fontFamily: 'monospace',
-                  fontSize: 11,
-                }}
-              >
-                {`<script src="https://your-domain.com/widget.js" data-api-key="${app.apiKey}"></script>`}
-              </Paragraph>
-            </div>
-          </Card>
+          <AppDataCard
+            app={app}
+            onEdit={() => {
+              setEditModalOpen(true);
+              editForm.setFieldsValue({
+                name: app.name,
+                description: app.description,
+                imageUrl: app.imageUrl,
+              });
+            }}
+            onDelete={() => setDeleteModalOpen(true)}
+            onCopyApiKey={handleCopyApiKey}
+            onRegenerateApiKey={handleRegenerateApiKey}
+            loading={editLoading}
+          />
         </Col>
-
-        {/* Feature Requests Management */}
         <Col xs={24}>
-          <Card title={featureTitle}>
-            <Row gutter={[16, 16]}>
-              <Col xs={24} sm={8}>
-                <Card size="small">
-                  <div style={{ textAlign: 'center' }}>
-                    <Title level={2} style={{ margin: 0, color: '#1890ff' }}>
-                      0
-                    </Title>
-                    <Text type="secondary">Pending Requests</Text>
-                  </div>
-                </Card>
-              </Col>
-
-              <Col xs={24} sm={8}>
-                <Card size="small">
-                  <div style={{ textAlign: 'center' }}>
-                    <Title level={2} style={{ margin: 0, color: '#52c41a' }}>
-                      0
-                    </Title>
-                    <Text type="secondary">Completed</Text>
-                  </div>
-                </Card>
-              </Col>
-
-              <Col xs={24} sm={8}>
-                <Card size="small">
-                  <div style={{ textAlign: 'center' }}>
-                    <Title level={2} style={{ margin: 0, color: '#faad14' }}>
-                      0
-                    </Title>
-                    <Text type="secondary">In Progress</Text>
-                  </div>
-                </Card>
-              </Col>
-            </Row>
-          </Card>
+          <FeatureRequestsCard appId={id} />
         </Col>
       </Row>
-
-      {/* Delete Modal */}
-      <Modal
-        open={deleteModalOpen}
-        title="Delete App"
-        onCancel={() => setDeleteModalOpen(false)}
-        onOk={handleDeleteApp}
-        okText="Delete"
-        okButtonProps={{ danger: true }}
-        cancelText="Cancel"
-      >
-        Are you sure you want to delete this app? This action cannot be undone.
-      </Modal>
-
-      {/* Edit Modal */}
-      <Modal
+      <DeleteAppModal open={deleteModalOpen} onCancel={() => setDeleteModalOpen(false)} onOk={handleDeleteApp} />
+      <EditAppModal
         open={editModalOpen}
-        title="Edit App"
         onCancel={() => setEditModalOpen(false)}
-        onOk={() => editForm.submit()}
-        okText="Save"
-        confirmLoading={editLoading}
-        cancelText="Cancel"
-      >
-        <Form
-          form={editForm}
-          layout="vertical"
-          initialValues={{
-            name: app.name,
-            description: app.description,
-            imageUrl: app.imageUrl,
-          }}
-          onFinish={handleEditApp}
-        >
-          <Form.Item
-            name="name"
-            label="App Name"
-            rules={[
-              { required: true, message: 'Please enter app name' },
-              { max: 100, message: 'App name must be less than 100 characters' },
-            ]}
-          >
-            <Input placeholder="Enter app name" />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ max: 500, message: 'Description must be less than 500 characters' }]}
-          >
-            <Input.TextArea placeholder="Brief description (optional)" rows={3} />
-          </Form.Item>
-          <Form.Item
-            name="imageUrl"
-            label="App Image URL"
-            rules={[{ type: 'url', message: 'Please enter a valid URL' }]}
-          >
-            <Input placeholder="https://example.com/app-logo.png (optional)" />
-          </Form.Item>
-        </Form>
-      </Modal>
+        onOk={handleEditApp}
+        loading={editLoading}
+        form={editForm}
+        app={app}
+      />
     </AdminContainer>
   );
 };

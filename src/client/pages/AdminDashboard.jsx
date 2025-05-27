@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Spin, FloatButton, Typography, Form } from 'antd';
+import { Spin, FloatButton, Form } from 'antd';
 import { PlusOutlined, LogoutOutlined } from '@ant-design/icons';
 import { callApi } from '../utils/api.util';
 import { appApi } from '../apis/_index';
 import notify from '../utils/notify';
 import { AppsGrid, CreateAppModal, EmptyAppsState, AdminContainer } from '../components/admin/_index';
 import { useAdmin } from '../hooks/_index';
-
-const { Title } = Typography;
 
 const AdminDashboard = () => {
   const [apps, setApps] = useState([]);
